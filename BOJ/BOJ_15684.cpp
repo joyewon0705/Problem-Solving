@@ -20,15 +20,14 @@ bool promising() {
 	return true;
 }
 
-void search(int cur, int cnt) {
+void search(int max, int cur, int cnt) {
 	
-	if (cnt > 3) return;
-	if (cnt > ans) return;
+	if (cnt > max) return;
 	if (promising()) {
 		if (ans > cnt) ans = cnt;
 		return;
 	}
-	if (ans == 0) return;
+	if (ans == max) return;
 
 	for (int i = 1; i < n; i++) {
 		for (int j = cur; j <= h; j++) {
@@ -37,7 +36,7 @@ void search(int cur, int cnt) {
 			if (chk[i + 1][j]) continue;
 
 			chk[i][j] = true;
-			search(j, cnt + 1);
+			search(max, j, cnt + 1);
 			chk[i][j] = false;
 		}
 	}
@@ -51,7 +50,10 @@ int main(void) {
 		chk[b][a] = true;
 	}
 
-	search(1, 0);
+	for (int i = 0; i < 4; i++) {
+		search(i, 1, 0);
+		if (ans == i) break;
+	}
 
 	if (ans >= INF) ans = -1;
 	printf("%d", ans);
