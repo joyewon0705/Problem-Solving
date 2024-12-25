@@ -1,11 +1,43 @@
 #include <iostream>
 
 #define N 22
+
 int dx[] = { 0, 0, 0, -1, 1 };
 int dy[] = { 0, 1, -1, 0, 0 };
 
-int n, m, x, y, k, d, cur;
-int map[N][N], dice[4][3];
+int n, m, x, y, k, d;
+int map[N][N], dice[7] = { 0 };
+
+void moveDice() {
+	int tmp = dice[1];
+
+	switch (d) {
+		case 1:
+			dice[1] = dice[4];
+			dice[4] = dice[6];
+			dice[6] = dice[3];
+			dice[3] = tmp;
+			break;
+		case 2:
+			dice[1] = dice[3];
+			dice[3] = dice[6];
+			dice[6] = dice[4];
+			dice[4] = tmp;
+			break;
+		case 3:
+			dice[1] = dice[5];
+			dice[5] = dice[6];
+			dice[6] = dice[2];
+			dice[2] = tmp;
+			break;
+		case 4:
+			dice[1] = dice[2];
+			dice[2] = dice[6];
+			dice[6] = dice[5];
+			dice[5] = tmp;
+			break;
+	}
+}
 
 int main(void) {
 
@@ -15,59 +47,29 @@ int main(void) {
 			scanf("%d", &map[i][j]);
 		}
 	}
-
 	for (int i = 0; i < k; i++) {
 		scanf("%d", &d);
 
-		int nx = x + dx[d];
-		int ny = y + dy[d];
+		x += dx[d];
+		y += dy[d];
 
-		if (nx < 0 || n <= nx || ny < 0 || m <= ny) continue;
-
-		int tmp;
-		switch (d) {
-			case 1:
-				tmp = dice[1][0];
-				dice[1][0] = dice[3][1];
-				dice[3][1] = dice[1][2];
-				dice[1][2] = dice[1][1];
-				dice[1][1] = tmp;
-				break;
-			case 2:
-				tmp = dice[1][2];
-				dice[1][2] = dice[3][1];
-				dice[3][1] = dice[1][0];
-				dice[1][0] = dice[1][1];
-				dice[1][1] = tmp;
-				break;
-			case 3:
-				tmp = dice[2][1];
-				dice[2][1] = dice[3][1];
-				dice[3][1] = dice[0][1];
-				dice[0][1] = dice[1][1];
-				dice[1][1] = tmp;
-				break;
-			case 4:
-				tmp = dice[0][1];
-				dice[0][1] = dice[3][1];
-				dice[3][1] = dice[2][1];
-				dice[2][1] = dice[1][1];
-				dice[1][1] = tmp;
-				break;
+		if (x < 0 || n <= x || y < 0 || m <= y) {
+			x -= dx[d];
+			y -= dy[d];
+			continue;
 		}
 
-		if (map[nx][ny]) {
-			dice[3][1] = map[nx][ny];
-			map[nx][ny] = 0;
+		moveDice();
+
+		if (map[x][y]) {
+			dice[6] = map[x][y];
+			map[x][y] = 0;
 		}
 		else {
-			map[nx][ny] = dice[3][1];
+			map[x][y] = dice[6];
 		}
 
-		x = nx; 
-		y = ny;
-
-		printf("%d\n", dice[1][1]);
+		printf("%d\n", dice[1]);
 	}
 
 	return 0;
