@@ -1,13 +1,12 @@
 #include <iostream>
-#include <vector>
+#include <stack>
 using namespace std;
 
-#define INF 1<<30
 #define N 505050
 
 int n;
-int h[N] = { INF };
-vector<int> v = { 0 };
+int h[N], a[N];
+stack<int> st;
 
 int main(void) {
 
@@ -16,17 +15,15 @@ int main(void) {
 		scanf("%d", &h[i]);
 	}
 
-	for (int i = 1; i <= n; i++) {
-		for (int j = v.size() - 1; j >= 0; j--) {
-			if (h[i] <= h[v[j]]) {
-				printf("%d ", v[j]);
-				break;
-			}
+	for (int i = n; i; i--) {
+		while (!st.empty() && h[st.top()] <= h[i]) {
+			a[st.top()] = i;
+			st.pop();
 		}
-		if (h[v[v.size() - 1]] <= h[i])
-			v[v.size() - 1] = i;
-		else v.push_back(i);
+		st.push(i);
 	}
+
+	for (int i = 1; i <= n; i++) printf("%d ", a[i]);
 
 	return 0;
 }
